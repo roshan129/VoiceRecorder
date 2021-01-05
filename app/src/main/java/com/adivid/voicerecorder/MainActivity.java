@@ -6,12 +6,15 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 
 import com.adivid.voicerecorder.databinding.ActivityMainBinding;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private int PERMISSIOn_CODE = 21;
 
     private MediaRecorder mediaRecorder;
-    private String recordFile;
+    private String recordFile, savedPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         //recordFile = System.currentTimeMillis() + ".mp3";
         recordFile = "Recording_" + formatter.format(now) + ".mp3";
 
+        savedPath = recordPath + recordFile;
+
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -87,6 +92,12 @@ public class MainActivity extends AppCompatActivity {
         mediaRecorder.stop();
         mediaRecorder.release();
         mediaRecorder = null;
+
+        Uri uri = Uri.fromFile(new File(savedPath));
+        File file = new File(savedPath);
+        Log.d("TAG", "stopRecording: Uri : "+ uri);
+        Log.d("TAG", "stopRecording: File : "+ file);
+
     }
 
     private boolean checkPermissions() {
